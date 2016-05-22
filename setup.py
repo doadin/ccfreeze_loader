@@ -15,16 +15,7 @@ if sys.version_info >= (3, 0):
 else:
     exec("def do_exec(co, loc): exec co in loc\n")
 
-
-def get_version():
-    d = {}
-    try:
-        do_exec(open("_bbfreeze_loader/__init__.py", "r").read(), d)
-    except Exception:
-        pass
-    return d["__version__"]
-
-version = get_version()
+version = "1.1.2"
 
 os.environ['LD_RUN_PATH'] = "${ORIGIN}:${ORIGIN}/../lib"
 
@@ -78,7 +69,7 @@ class Conf(object):
 
         items = sorted(d.items())
         res = ['']
-        first = "------ bbfreeze-loader %s configuration ------" % (version,)
+        first = "------ ccfreeze-loader %s configuration ------" % (version,)
         res.append(first)
         for k, v in items:
             res.append("%s = %s" % (k, v))
@@ -156,8 +147,8 @@ class BuildInterpreters(build_ext.build_ext):
         self._patch()
         return build_ext.build_ext.build_extension(self, ext)
 
-long_description = """bbfreeze-loader provides binary dependencies for
-bbfreeze. please do not install this module, install bbfreeze
+long_description = """ccfreeze-loader provides binary dependencies for
+ccfreeze. please do not install this module, install ccfreeze
 instead."""
 
 
@@ -204,7 +195,7 @@ def main():
     if sys.platform == 'win32':
         define_macros.append(('WIN32', 1))
     else:
-        extra_sources.append('_bbfreeze_loader/getpath.c')
+        extra_sources.append('_ccfreeze_loader/getpath.c')
 
     if sys.platform == 'win32':
         extra_link_args = ['/LARGEADDRESSAWARE']
@@ -220,20 +211,20 @@ def main():
                       define_macros=define_macros)
         ext_modules.append(e)
 
-    ext("_bbfreeze_loader/console", ['_bbfreeze_loader/console.c'], libs)
+    ext("_ccfreeze_loader/console", ['_ccfreeze_loader/console.c'], libs)
     if sys.platform == 'win32':
-        ext("_bbfreeze_loader/consolew", ['_bbfreeze_loader/consolew.c'], libs + ['user32'])
+        ext("_ccfreeze_loader/consolew", ['_ccfreeze_loader/consolew.c'], libs + ['user32'])
 
-    setup(name="bbfreeze-loader",
+    setup(name="ccfreeze-loader",
           cmdclass=dict(build_ext=BuildInterpreters),
           version=version,
           ext_modules=ext_modules,
-          packages=['_bbfreeze_loader'],
+          packages=['_ccfreeze_loader'],
           zip_safe=False,
-          maintainer="Ralf Schmitt",
-          maintainer_email="ralf@systemexit.de",
-          url="http://pypi.python.org/pypi/bbfreeze/",
-          description="provide binary loaders for bbfreeze",
+          maintainer="Josh Brown",
+          maintainer_email="cars1189@aol.com",
+          url="http://pypi.python.org/pypi/ccfreeze/",
+          description="provide binary loaders for ccfreeze",
           long_description=long_description,
           platforms="Linux Windows",
           license="zlib/libpng license",
@@ -243,9 +234,6 @@ def main():
             "Intended Audience :: Developers",
             "Programming Language :: Python",
             "Programming Language :: Python :: 2",
-            "Programming Language :: Python :: 2.4",
-            "Programming Language :: Python :: 2.5",
-            "Programming Language :: Python :: 2.6",
             "Programming Language :: Python :: 2.7",
             "Topic :: Software Development :: Build Tools",
             "Topic :: System :: Software Distribution"])

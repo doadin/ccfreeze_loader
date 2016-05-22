@@ -25,7 +25,7 @@
 static void fatal(const char *message)
 {
 #ifdef GUI
-	MessageBox(NULL, message, "bbfreeze Fatal Error", MB_ICONERROR);
+	MessageBox(NULL, message, "ccfreeze Fatal Error", MB_ICONERROR);
 #else
 	fprintf(stderr, "Fatal error: %s", message);	
 #endif

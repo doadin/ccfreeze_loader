@@ -1,13 +1,13 @@
 Metadata-Version: 1.1
-Name: bbfreeze-loader
-Version: 1.1.0
-Summary: provide binary loaders for bbfreeze
-Home-page: http://pypi.python.org/pypi/bbfreeze/
-Author: Ralf Schmitt
-Author-email: ralf@systemexit.de
+Name: ccfreeze-loader
+Version: 1.1.2
+Summary: provide binary loaders for ccfreeze
+Home-page: http://pypi.python.org/pypi/ccfreeze/
+Author: Josh Brown
+Author-email: cars1189@aol.com
 License: zlib/libpng license
-Description: bbfreeze-loader provides binary dependencies for
-        bbfreeze. please do not install this module, install bbfreeze
+Description: ccfreeze-loader provides binary dependencies for
+        ccfreeze. please do not install this module, install ccfreeze
         instead.
 Platform: Linux Windows
 Classifier: Development Status :: 5 - Production/Stable
@@ -15,9 +15,6 @@ Classifier: License :: OSI Approved :: zlib/libpng License
 Classifier: Intended Audience :: Developers
 Classifier: Programming Language :: Python
 Classifier: Programming Language :: Python :: 2
-Classifier: Programming Language :: Python :: 2.4
-Classifier: Programming Language :: Python :: 2.5
-Classifier: Programming Language :: Python :: 2.6
 Classifier: Programming Language :: Python :: 2.7
 Classifier: Topic :: Software Development :: Build Tools
 Classifier: Topic :: System :: Software Distribution
