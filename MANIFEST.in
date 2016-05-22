@@ -1,0 +1,8 @@
+include MANIFEST.in
+include _bbfreeze_loader/__init__.py
+include _bbfreeze_loader/console.c
+include _bbfreeze_loader/consolew.c
+include _bbfreeze_loader/getpath.c
+include _bbfreeze_loader/loader_impl.h
+include setup.cfg
+include setup.py
