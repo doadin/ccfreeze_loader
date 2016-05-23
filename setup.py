@@ -121,6 +121,7 @@ class BuildInterpreters(build_ext.build_ext):
             if '-Xlinker' in linker:
                 linker += ' -Xlinker -zmuldefs'
                 linker += ' -Xlinker --disable-new-dtags'
+                linker += ' -v'
             LOCALMODLIBS = sysconfig.get_config_var("LOCALMODLIBS") or ""
 
             self.compiler.set_executables(linker_exe=linker)
