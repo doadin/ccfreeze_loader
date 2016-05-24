@@ -29,13 +29,19 @@ class Conf(object):
         self.win32 = (sys.platform == 'win32')
         self.unix = not (self.darwin or self.win32)  # other unix
         VERSION = sysconfig.get_config_var("VERSION")
+        self.static_library = self._static_library()
+        VERSIONM = "%s%s" % (VERSION, 'm')
         if VERSION:
-            self.PYTHONVERSION = "python%s" % (VERSION,)
-        else:
-            self.PYTHONVERSION = ""
+            if sys.version_info <= (3,0):
+                self.PYTHONVERSION = "python%s" % (VERSION,)
+                print(self.PYTHONVERSION)
+            elif sys.version_info >= (3,0):
+                VERSION += 'm'
+                self.PYTHONVERSION = "python%s" % (VERSION,)
+            else:
+                self.PYTHONVERSION = ""
         self.linker = self._linker()
         self.symbolic_functions_bug = self._symbolic_functions()
-        self.static_library = self._static_library()
 
     def _linker(self):
         LINKFORSHARED = sysconfig.get_config_var("LINKFORSHARED")
