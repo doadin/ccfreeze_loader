@@ -15,7 +15,7 @@ if sys.version_info >= (3, 0):
 else:
     exec("def do_exec(co, loc): exec co in loc\n")
 
-version = "1.1.2"
+version = "1.1.3"
 
 os.environ['LD_RUN_PATH'] = "${ORIGIN}:${ORIGIN}/../lib"
 
