@@ -15,7 +15,7 @@
 ID
 __pycache__/
 ccfreeze/*.exe
-ccfreeze.egg-info
+ccfreeze_loader.egg-info
 bbfreeze/*.exe
 bbfreeze.egg-info
 tests/dist
