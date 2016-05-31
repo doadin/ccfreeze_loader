@@ -66,6 +66,170 @@ static void fatal(const char *message)
 
 static char *syspath = 0;
 
+static void
+reduce(char *dir)
+{
+    size_t i = strlen(dir);
+    while (i > 0 && dir[i] != SEP)
+        --i;
+    dir[i] = '\0';
+}
+
+static void
+joinpath(char *buffer, char *stuff)
+{
+    size_t n, k;
+    if (stuff[0] == SEP)
+        n = 0;
+    else {
+        n = strlen(buffer);
+        if (n > 0 && buffer[n-1] != SEP && n < MAXPATHLEN)
+            buffer[n++] = SEP;
+    }
+    if (n > MAXPATHLEN)
+    	Py_FatalError("buffer overflow in getpath.c's joinpath()");
+    k = strlen(stuff);
+    if (n + k > MAXPATHLEN)
+        k = MAXPATHLEN - n;
+    strncpy(buffer+n, stuff, k);
+    buffer[n+k] = '\0';
+}
+
+static void
+absolutize(char *path)
+{
+    char buffer[MAXPATHLEN + 1];
+
+    if (path[0] == SEP)
+        return;
+    copy_absolute(buffer, path);
+    strcpy(path, buffer);
+}
+
+static int
+isxfile(char *filename)         /* Is executable file */
+{
+    struct stat buf;
+    if (stat(filename, &buf) != 0)
+        return 0;
+    if (!S_ISREG(buf.st_mode))
+        return 0;
+    if ((buf.st_mode & 0111) == 0)
+        return 0;
+    return 1;
+}
+
+/* search_for_prefix requires that argv0_path be no more than MAXPATHLEN
+   bytes long.
+*/
+static int
+search_for_prefix(char *argv0_path, char *home)
+{
+    size_t n;
+    char *vpath;
+
+    /* If PYTHONHOME is set, we believe it unconditionally */
+    if (home) {
+        char *delim;
+        strncpy(prefix, home, MAXPATHLEN);
+        delim = strchr(prefix, DELIM);
+        if (delim)
+            *delim = '\0';
+        joinpath(prefix, lib_python);
+        joinpath(prefix, LANDMARK);
+        return 1;
+    }
+
+    /* Check to see if argv[0] is in the build directory */
+    strcpy(prefix, argv0_path);
+    joinpath(prefix, "Modules/Setup");
+    if (isfile(prefix)) {
+        /* Check VPATH to see if argv0_path is in the build directory. */
+        vpath = VPATH;
+        strcpy(prefix, argv0_path);
+        joinpath(prefix, vpath);
+        joinpath(prefix, "Lib");
+        joinpath(prefix, LANDMARK);
+        if (ismodule(prefix))
+            return -1;
+    }
+
+    /* Search from argv0_path, until root is found */
+    copy_absolute(prefix, argv0_path);
+    do {
+        n = strlen(prefix);
+        joinpath(prefix, lib_python);
+        joinpath(prefix, LANDMARK);
+        if (ismodule(prefix))
+            return 1;
+        prefix[n] = '\0';
+        reduce(prefix);
+    } while (prefix[0]);
+
+    /* Look at configure's PREFIX */
+    strncpy(prefix, PREFIX, MAXPATHLEN);
+    joinpath(prefix, lib_python);
+    joinpath(prefix, LANDMARK);
+    if (ismodule(prefix))
+        return 1;
+
+    /* Fail */
+    return 0;
+}
+
+
+/* search_for_exec_prefix requires that argv0_path be no more than
+   MAXPATHLEN bytes long.
+*/
+static int
+search_for_exec_prefix(char *argv0_path, char *home)
+{
+    size_t n;
+
+    /* If PYTHONHOME is set, we believe it unconditionally */
+    if (home) {
+        char *delim;
+        delim = strchr(home, DELIM);
+        if (delim)
+            strncpy(exec_prefix, delim+1, MAXPATHLEN);
+        else
+            strncpy(exec_prefix, home, MAXPATHLEN);
+        joinpath(exec_prefix, lib_python);
+        joinpath(exec_prefix, "lib-dynload");
+        return 1;
+    }
+
+    /* Check to see if argv[0] is in the build directory */
+    strcpy(exec_prefix, argv0_path);
+    joinpath(exec_prefix, "Modules/Setup");
+    if (isfile(exec_prefix)) {
+        reduce(exec_prefix);
+        return -1;
+    }
+
+    /* Search from argv0_path, until root is found */
+    copy_absolute(exec_prefix, argv0_path);
+    do {
+        n = strlen(exec_prefix);
+        joinpath(exec_prefix, lib_python);
+        joinpath(exec_prefix, "lib-dynload");
+        if (isdir(exec_prefix))
+            return 1;
+        exec_prefix[n] = '\0';
+        reduce(exec_prefix);
+    } while (exec_prefix[0]);
+
+    /* Look at configure's EXEC_PREFIX */
+    strncpy(exec_prefix, EXEC_PREFIX, MAXPATHLEN);
+    joinpath(exec_prefix, lib_python);
+    joinpath(exec_prefix, "lib-dynload");
+    if (isdir(exec_prefix))
+        return 1;
+
+    /* Fail */
+    return 0;
+}
+
 static void dirname(const char *path)
 {
 	char *lastsep = strrchr(path, SEP);
