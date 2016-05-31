@@ -83,6 +83,43 @@ reduce(char *dir)
     dir[i] = '\0';
 }
 
+static int
+isfile(char *filename)          /* Is file, not directory */
+{
+    struct stat buf;
+    if (stat(filename, &buf) != 0)
+        return 0;
+    if (!S_ISREG(buf.st_mode))
+        return 0;
+    return 1;
+}
+
+static int
+ismodule(char *filename)        /* Is module -- check for .pyc/.pyo too */
+{
+    if (isfile(filename))
+        return 1;
+
+    /* Check for the compiled version of prefix. */
+    if (strlen(filename) < MAXPATHLEN) {
+        strcat(filename, Py_OptimizeFlag ? "o" : "c");
+        if (isfile(filename))
+            return 1;
+    }
+    return 0;
+}
+
+static int
+isdir(char *filename)                   /* Is directory */
+{
+    struct stat buf;
+    if (stat(filename, &buf) != 0)
+        return 0;
+    if (!S_ISDIR(buf.st_mode))
+        return 0;
+    return 1;
+}
+
 static void
 joinpath(char *buffer, char *stuff)
 {
@@ -101,6 +138,21 @@ joinpath(char *buffer, char *stuff)
         k = MAXPATHLEN - n;
     strncpy(buffer+n, stuff, k);
     buffer[n+k] = '\0';
+}
+
+/* copy_absolute requires that path be allocated at least
+   MAXPATHLEN + 1 bytes and that p be no more than MAXPATHLEN bytes. */
+static void
+copy_absolute(char *path, char *p)
+{
+    if (p[0] == SEP)
+        strcpy(path, p);
+    else {
+        getcwd(path, MAXPATHLEN);
+        if (p[0] == '.' && p[1] == SEP)
+            p += 2;
+        joinpath(path, p);
+    }
 }
 
 static void
