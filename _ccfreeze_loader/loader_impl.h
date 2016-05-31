@@ -48,6 +48,8 @@
 
 static char progpath[MAXPATHLEN+1];
 static char lib_python[] = "lib/python" VERSION;
+static char prefix[MAXPATHLEN+1];
+static char exec_prefix[MAXPATHLEN+1];
 
 static char *module_search_path = NULL;
 
