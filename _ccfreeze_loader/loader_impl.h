@@ -61,7 +61,6 @@ My_Py_GetPath(void)
 
 
     Py_GetPath();
-    compute_syspath();
     return syspath;
 }
 
