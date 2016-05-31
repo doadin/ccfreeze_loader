@@ -33,10 +33,6 @@
 #  endif
 #endif
 
-#ifndef VERSION
-#define VERSION "2.1"
-#endif
-
 #ifndef EXEC_PREFIX
 #define EXEC_PREFIX PREFIX
 #endif
