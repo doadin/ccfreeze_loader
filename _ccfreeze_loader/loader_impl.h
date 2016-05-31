@@ -21,6 +21,34 @@
 #include <stdlib.h>
 #endif
 
+#ifndef VERSION
+#define VERSION "2.1"
+#endif
+
+#ifndef PREFIX
+#  ifdef __VMS
+#    define PREFIX ""
+#  else
+#    define PREFIX "/usr/local"
+#  endif
+#endif
+
+#ifndef VERSION
+#define VERSION "2.1"
+#endif
+
+#ifndef EXEC_PREFIX
+#define EXEC_PREFIX PREFIX
+#endif
+
+#ifndef PYTHONPATH
+#define PYTHONPATH PREFIX "/lib/python" VERSION ":" \
+              EXEC_PREFIX "/lib/python" VERSION "/lib-dynload"
+#endif
+
+static char progpath[MAXPATHLEN+1];
+static char lib_python[] = "lib/python" VERSION;
+
 static char *module_search_path = NULL;
 
 static void fatal(const char *message)
@@ -59,7 +87,7 @@ static void compute_syspath(void)
 static void
 calculate_path(void)
 {
-    extern char *Py_GetProgramName(void);
+    extern char *My_Py_GetProgramName(void);
 
     static char delimiter[2] = {DELIM, '\0'};
     static char separator[2] = {SEP, '\0'};
