@@ -201,8 +201,6 @@ def main():
 
     if sys.platform == 'win32':
         define_macros.append(('WIN32', 1))
-    else:
-        extra_sources.append('_ccfreeze_loader/getpath.c')
 
     if sys.platform == 'win32':
         extra_link_args = ['/LARGEADDRESSAWARE']

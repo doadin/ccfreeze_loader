@@ -32,7 +32,7 @@ static void fatal(const char *message)
 	exit(1);
 }
 
-#ifdef WIN32
+
 static char *syspath = 0;
 
 static void dirname(const char *path)
@@ -54,7 +54,19 @@ static void compute_syspath(void)
 	sprintf(syspath, "%s%clibrary.zip%c%s", resolved_path, SEP, DELIM, resolved_path);
 	//fprintf(stderr, "syspath: %s\n", syspath);
 }
-#endif
+
+char *
+My_Py_GetPath(void)
+{
+    if (!module_search_path)
+        calculate_path();
+    /* return module_search_path; */
+
+    Py_GetPath();
+    compute_syspath();
+    return syspath;
+}
+
 
 static int run_script(void)
 {
@@ -141,7 +153,7 @@ static int loader_main(int argc, char **argv)
 	compute_syspath();
 	PySys_SetPath(syspath);
 #else
-	PySys_SetPath(Py_GetPath());
+	PySys_SetPath(My_Py_GetPath());
 #endif
 	return run_script();
 }
