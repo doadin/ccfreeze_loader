@@ -46,6 +46,14 @@
               EXEC_PREFIX "/lib/python" VERSION "/lib-dynload"
 #endif
 
+#ifndef LANDMARK
+#define LANDMARK "os.py"
+#endif
+
+#ifndef VPATH
+#define VPATH "."
+#endif
+
 static char progpath[MAXPATHLEN+1];
 static char lib_python[] = "lib/python" VERSION;
 static char prefix[MAXPATHLEN+1];
