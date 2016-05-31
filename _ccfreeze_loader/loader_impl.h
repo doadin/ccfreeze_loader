@@ -22,7 +22,7 @@
 #endif
 
 #ifndef VERSION
-#define VERSION "2.1"
+#define VERSION "3.1"
 #endif
 
 #ifndef PREFIX
