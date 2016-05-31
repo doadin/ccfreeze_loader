@@ -58,9 +58,7 @@ static void compute_syspath(void)
 char *
 My_Py_GetPath(void)
 {
-    if (!module_search_path)
-        calculate_path();
-    /* return module_search_path; */
+
 
     Py_GetPath();
     compute_syspath();
